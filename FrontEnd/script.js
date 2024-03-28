@@ -108,7 +108,7 @@ buttonTous.addEventListener("click", () => {
     buttonTous.classList.add("filter_clicked");
 });
 
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < categories.length; i++) {
     integrerBoutons(categories[i]);
 };
 
@@ -142,8 +142,7 @@ function integrerMiniWorks(article) {
     miniFig.classList.add("mini-fig");
     miniPic.classList.add("mini-pic");
     trashPic.classList.add("trash-pic");
-    trashPic.addEventListener("click", (event) => {
-        event.preventDefault();
+    trashPic.addEventListener("click", () => {        
         supprimerWorks(article.id);
     });
 
@@ -171,9 +170,14 @@ async function supprimerWorks(idImage) {
         });
         
         if (response.ok) {
+
+            // creation d'une copie des works stockés en local
             let localWorks = JSON.parse(localStorage.getItem("works"));
+            // filtrer les works -> mise à jour (on enlève celui qu'on a supprimé)
             localWorks = localWorks.filter(work => work.id !== idImage);
+            // sauvegarde de la liste filtrée en localStorage
             localStorage.setItem("works", JSON.stringify(localWorks));
+            // chargement de la liste mise à jour
             worksStorageString = localStorage.getItem("works");
             works = JSON.parse(worksStorageString);
             cleanWorks();
@@ -243,10 +247,11 @@ function categoriesAjoutPhoto(cat) {
     addCategorie.appendChild(optionCategorie);
 }
 
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < categories.length; i++) {
     categoriesAjoutPhoto(categories[i]);
 }
 
+// formulaire ajout photo
 const form = document.getElementById('form-new-work');
 
 form.addEventListener('input', function () {
@@ -258,16 +263,21 @@ form.addEventListener('input', function () {
     const isFileSelected = addFile.files.length > 0;
     const isCategorySelected = addCategorie.value.trim() !== '';
 
+    let submitButtonM = document.getElementById('submit-button-modale2');
+
     if (isTitleFilled && isFileSelected && isCategorySelected) {
-        console.log("Tous les champs sont remplis !");
-        let submitButtonM = document.getElementById('submit-button-modale2');
+        console.log("Tous les champs sont remplis !");        
         submitButtonM.style.backgroundColor = '#1D6154';
         submitButtonM.style.cursor = 'pointer';
         submitButtonM.removeAttribute("disabled");
+    } else {
+        submitButtonM.style.backgroundColor = '#B3B3B3';
+        submitButtonM.style.cursor = 'not-allowed';
+        submitButtonM.setAttribute("disabled", false);
     }
 });
 
-// formulaire
+// form data
 form.addEventListener('submit', async function(event) {
     event.preventDefault(); 
 

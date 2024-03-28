@@ -3,8 +3,8 @@ function login(username, password) {
 
         method: "POST",
         headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
+            'accept': 'application/json', // demande de reponse au format json
+            'Content-Type': 'application/json', // on signale au serveur qu'on lui envoi les infos en json
         },
         body: JSON.stringify({
             email: username,
@@ -17,7 +17,7 @@ function login(username, password) {
                 reponseServeur.then(data => {
                     console.log(data)
                     localStorage.setItem("token", JSON.stringify(data.token))
-                    window.location.href="./index.html"               
+                    window.location.href="./index.html"  // redirection vers la page d'accueil             
                 })
             } else {                
                let messageErreur = document.getElementById("error_message")
@@ -30,8 +30,10 @@ function login(username, password) {
 
 let token = localStorage.getItem("token");
 
+// ajout de l'event listener "submit" au formulaire, recupere les valeurs email/password et lance la fonction login
+
 document.getElementById("login_form").addEventListener("submit", function (event) {
-    event.preventDefault()
+    event.preventDefault() // empecher le rechargement de la page
     let username = document.getElementById("email").value
     let password = document.getElementById("password").value
     login(username, password)
